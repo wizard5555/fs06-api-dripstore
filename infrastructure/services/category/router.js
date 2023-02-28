@@ -7,6 +7,13 @@ app.get('/categories', async (req, res) => {
     res.send(data);
 });
 
+app.get('/categories', async (req, res) => {
+    let data = await database.execute('SELECT * FROM tb_category');
+
+    res.send(data);
+});
+
+
 app.get('/categories/:id', async (req, res) => {
     let data = await database.execute(`
         SELECT * FROM tb_category WHERE id='${req.params.id}'

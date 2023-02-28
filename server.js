@@ -6,12 +6,13 @@ const customerRouter = require('./infrastructure/services/customer/router');
 //aqui a gente inicia o express
 const app = express();
 
+//definindo o tipo de dado que vai ficar saindo e chegando da API
+app.use(express.json()); 
+
 //adicionando as rotas de category ao servidor
 app.use(categoryRouter);
 app.use(customerRouter);
 
-//definindo o tipo de dado que vai ficar saindo e chegando da API
-app.use(express.json());
 
 //porta do servidor da API
 const port = 8000;
