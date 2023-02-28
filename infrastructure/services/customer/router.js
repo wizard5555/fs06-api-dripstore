@@ -2,6 +2,8 @@ const app = require('express').Router();
 const database = require('../../connection/database');
 const {DateTime} = require('luxon');
 
+DateTime.local().setZone('America/Fortaleza');
+
 app.get('/customers', async (req, res) => {
     let data = await database.execute('SELECT * FROM tb_customer');
 
@@ -15,6 +17,32 @@ app.get('/customers/:id', async (req, res) => {
 
     res.send(data[0]);
 });
+
+app.delete('/customers/:id', async (req, res) => {
+    let data = await database.execute(`
+        DELETE FROM tb_customer WHERE id='${req.params.id}'
+    `);
+
+    res.sendStatus(204);
+});
+
+
+app.patch('/customers/:id', async (req, res) => {
+    let customer = req.body;
+
+    let data = await database.execute(`
+        UPDATE tb_customer 
+        SET 
+            name='${customer.name}', 
+            email='${customer.email}', 
+            phone='${customer.phone}' 
+        WHERE
+            id = '${req.params.id}'
+    `);
+
+    res.send(customer);
+});
+
 
 app.post('/customers', async (req, res) => {
     let customer = req.body;

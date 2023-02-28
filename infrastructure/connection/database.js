@@ -11,6 +11,7 @@ async function connect() {
          password: USER_PASS,
          host: DB_HOST,
          database: DB_NAME,
+         timezone: 'America/Fortaleza',
     });
 
     return con;
