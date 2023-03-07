@@ -3,6 +3,16 @@ const database = require('../../connection/database');
 const validator = require('./validator');
 
 app.get('/categories', async (req, res) => {
+    let token = req.headers.senha;
+
+    if (token !== '123bolinha') {
+        res.status(401).send({
+            error: 'invalid token'
+        });
+
+        return;
+    }
+
     let data = await database.execute('SELECT * FROM tb_category');
 
     res.send(data);
@@ -40,6 +50,14 @@ app.post('/categories', async (req, res) => {
     await database.execute(query);
 
     res.send(body);
+});
+
+app.delete('/categories/:id', async (req, res) => {
+    let query = `DELETE FROM tb_category WHERE id='${req.params.id}'`;
+
+    database.execute(query);
+
+    res.sendStatus(204);
 });
 
 module.exports = app;
