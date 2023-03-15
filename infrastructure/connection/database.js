@@ -1,9 +1,13 @@
 const mysql = require('mysql2/promise');
+const dotenv = require('dotenv');
 
-const USER_NAME = 'root';
-const USER_PASS = '1234';
-const DB_NAME = 'db_dripstore';
-const DB_HOST = 'localhost';
+//aqui a gente carrega na memoria os dados do .env
+dotenv.config();
+
+const USER_NAME = process.env.DB_USER;
+const USER_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
+const DB_HOST = process.env.DB_HOST;
 
 async function connect() {
     const con = await mysql.createConnection({

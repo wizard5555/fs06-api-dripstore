@@ -37,3 +37,23 @@ VALUES
 -- Alterar a tabela de cliente --
 ALTER TABLE tb_customer 
     ADD COLUMN created_at datetime NOT NULL;
+
+USE db_dripstore;
+
+CREATE TABLE tb_user (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NULL
+);
+
+
+INSERT INTO tb_user 
+(id, name, email, password)
+VALUES (
+    'f5f71af4-b739-4bed-a843-1b663fa61f3d',
+    'Usuario Teste',
+    'usuario@teste.com',
+    '1q2w3e'
+);
