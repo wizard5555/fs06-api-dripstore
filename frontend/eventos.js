@@ -1,3 +1,29 @@
+if (null == localStorage.getItem('token')) {
+    location.href="login.html";
+}
+
+let user = JSON.parse(
+    window.atob(localStorage.getItem('token').split('.')[1])
+);
+
+document.getElementById('usuario').innerHTML = `Bem vindo(a) ${user.username}`;
+
+
+function logout() {
+    //pra deslogar na API, remover o token do banco de dados
+    fetch('http://localhost:8000/logout', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    });
+
+    //pra remover o token local
+    localStorage.removeItem('token');
+
+    location.href="login.html";
+}
+
+
 function excluir(categoriaId) {
     if (false == confirm('Tem certeza?')) {
         return;

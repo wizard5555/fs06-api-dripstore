@@ -1,12 +1,26 @@
 const database = require('../../connection/database');
 const app = require('express').Router();
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken'); //pra gerar o token autenticado
+const repository = require('../../repository/abstractRepository');
 
+function gerarNovoToken(email, id) {
+    let data = {
+        username: email, 
+        id: id,
+    };
 
+    let novoToken = jwt.sign(data, 'senhasenha', {
+        expiresIn: 1800
+    }); //gerando um token exclusivo praquele email
+    
+    return novoToken;
+}
 
 // GET http://localhost:8000/users
 app.get('/users', async (req, res) => {
-    let data = await database.execute('SELECT id, name, email FROM tb_user');
+    // let data = await database.execute('SELECT id, name, email FROM tb_user');
+    let data = await repository.findAll('tb_user', ['id', 'name', 'email']);
 
     res.send(data);
 });
@@ -35,7 +49,7 @@ app.post('/login', async (req, res) => {
     `);
 
     if (user.length === 0) {
-        res.status(400).send('Email nao existe');
+        res.status(400).send({erro: 'Email nao existe'});
         return;
     }
 
@@ -44,15 +58,17 @@ app.post('/login', async (req, res) => {
     user = user[0];
 
     if (! await argon2.verify(user.password, password)) {
-        res.status(400).send('Senha Incorreta');
+        res.status(400).send({erro: 'Senha Incorreta'});
         return;
     }
 
+    let token = gerarNovoToken(email, user.id); 
+
     database.execute(`
-        UPDATE tb_user SET token='123456' WHERE id='${user.id}'
+        UPDATE tb_user SET token='${token}' WHERE id='${user.id}'
     `);
 
-    res.send('ok');
+    res.send({token: token});
 });
 
 app.get('/logout', async (req, res) => {

@@ -1,6 +1,7 @@
 const app = require('express').Router();
 const database = require('../../connection/database');
 const validator = require('./validator');
+const repository = require('../../repository/abstractRepository');
 
 app.get('/categories', async (req, res) => {
     let token = req.headers.senha;
@@ -13,17 +14,23 @@ app.get('/categories', async (req, res) => {
         return;
     }
 
-    let data = await database.execute('SELECT * FROM tb_category');
+    let limit = req.query.limit || 10;
+    let page = req.query.page || 1;
+    let offset = (page - 1) * limit;
+    let order = req.query.order || 'name'
+    let asc = req.query.asc || 'asc';
+
+    let data = await database.execute(`
+        SELECT * FROM tb_category ORDER BY ${order} ${asc} LIMIT ${offset}, ${limit}
+    `);
 
     res.send(data);
 });
 
 app.get('/categories/:id', async (req, res) => {
-    let data = await database.execute(`
-        SELECT * FROM tb_category WHERE id='${req.params.id}'
-    `);
+    let data = await repository.find('tb_category', req.params.id);
 
-    res.send(data[0]);
+    res.send(data);
 });
 
 app.post('/categories', async (req, res) => {

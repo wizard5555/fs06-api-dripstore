@@ -1,6 +1,7 @@
 const app = require('express').Router();
 const database = require('../../connection/database');
 const {DateTime} = require('luxon');
+const repository = require('../../repository/abstractRepository');
 
 DateTime.local().setZone('America/Fortaleza');
 
@@ -11,11 +12,9 @@ app.get('/customers', async (req, res) => {
 });
 
 app.get('/customers/:id', async (req, res) => {
-    let data = await database.execute(`
-        SELECT name, email FROM tb_customer WHERE id='${req.params.id}'
-    `);
+    let data = await repository.find('tb_customer', req.params.id);
 
-    res.send(data[0]);
+    res.send(data);
 });
 
 app.delete('/customers/:id', async (req, res) => {

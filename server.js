@@ -12,9 +12,9 @@ const userRouter = require('./infrastructure/services/user/router');
 //aqui a gente inicia o express
 const app = express();
 
-app.use(cors());
 
 //definindo o tipo de dado que vai ficar saindo e chegando da API
+app.use(cors());
 app.use(express.json()); 
 
 //adicionando as rotas de category ao servidor
