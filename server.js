@@ -1,13 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const swagger = require('swagger-ui-express');
+const swaggerFile = require('./swagger.json');
 
 dotenv.config();
+
 
 
 const categoryRouter = require('./infrastructure/services/category/router');
 const customerRouter = require('./infrastructure/services/customer/router');
 const userRouter = require('./infrastructure/services/user/router');
+const bannerRouter = require('./infrastructure/services/banner/router');
 
 //aqui a gente inicia o express
 const app = express();
@@ -21,6 +25,10 @@ app.use(express.json());
 app.use(categoryRouter);
 app.use(customerRouter);
 app.use(userRouter);
+app.use(bannerRouter);
+
+//gerando documentação
+app.use('/', swagger.serve, swagger.setup(swaggerFile));
 
 
 //porta do servidor da API

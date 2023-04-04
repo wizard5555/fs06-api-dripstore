@@ -17,4 +17,4 @@ for (let i = 1; i <= 100; i++) {
     database.execute(sql);
 } 
 
-console.log('PRONTO, 100 categorias inseridas');
+console.log('PRONTO, 10 categorias inseridas');

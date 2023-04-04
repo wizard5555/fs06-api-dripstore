@@ -15,8 +15,6 @@ async function findAll(table, columns) {
         projection = columns.join(', '); 
     }
 
-    let sql = `SELECT ${projection} FROM ${table}`;
-
     let data = await database.execute(sql);
 
     return data;
